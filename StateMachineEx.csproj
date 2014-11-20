@@ -37,6 +37,7 @@
     <Reference Include="System.Xml" />
     <Reference Include="UnityEngine">
       <HintPath>C:\Program Files (x86)\Unity\Editor\Data\Managed\UnityEngine.dll</HintPath>
+      <Private>False</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -45,17 +46,20 @@
     <Compile Include="src\StateMachine.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Galaxy\Libraries\SystemEx\SystemEx.csproj">
+    <ProjectReference Include="..\SystemEx\SystemEx.csproj">
       <Project>{0271e27f-e614-4b0f-af16-05d2d2781b7f}</Project>
       <Name>SystemEx</Name>
+      <Private>False</Private>
     </ProjectReference>
-    <ProjectReference Include="..\Galaxy\Libraries\UnityEngineEx\UnityEngineEx.csproj">
+    <ProjectReference Include="..\UnityEngineEx\UnityEngineEx.csproj">
       <Project>{5ddef78f-3298-4583-adf8-21421e4b29f9}</Project>
       <Name>UnityEngineEx</Name>
+      <Private>False</Private>
     </ProjectReference>
-    <ProjectReference Include="..\Galaxy\Libraries\UnityInput\UnityInput.csproj">
+    <ProjectReference Include="..\UnityInput\UnityInput.csproj">
       <Project>{39cf607c-9b8a-4f18-bc57-df2c1bc52b5e}</Project>
       <Name>UnityInput</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
