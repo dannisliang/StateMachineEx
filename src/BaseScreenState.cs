@@ -2,7 +2,7 @@
 using UnityEngineEx;
 using UnityInput;
 
-namespace Code.GameStates
+namespace StateMachineEx
 {
 	public class BaseScreenState : State
 	{

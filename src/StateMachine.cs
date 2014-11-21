@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using SystemEx;
 
-namespace Code
+namespace StateMachineEx
 {
 	public interface IState : IDisposable
 	{
@@ -18,24 +18,45 @@ namespace Code
 	public class State
 	{
 		StateMachine stateMachine = null;
+		string name = null;
 
-		public string Name { get { return this.GetType().Name; } }
+		public string Name { get { return name; } }
 		public StateMachine StateMachine { get { return stateMachine; } set { stateMachine = value; } }
-		public Transition Transition { set { stateMachine.Transition = value; } }
+		public object[] Parameters { get; set; }
+		public Transition Transition { set { stateMachine.Transition = value; } }		
+
+		protected State()
+		{
+			var attr = this.GetType().GetAttribute<StateNameAttribute>();
+			if (attr != null)
+				name = attr.name;
+			else
+				name = this.GetType().Name;
+		}
 	}
 
 	public class Transition
 	{
 		public string Name { get; protected set; }
+		public object[] Parameters { get; protected set; }
 
 		public Transition(string name)
 		{
 			Name = name;
 		}
+		
+		public Transition Params(params object[] parameters)
+		{
+			Parameters = parameters;
+			return this;
+		}
 	}
 
 	public class StateMachine
 	{
+		public static readonly Transition DirectTransition = new Transition("<direct>");
+
+
 		Dictionary<string, IState> states = new Dictionary<string, IState>();
 		Dictionary<Tuple<string, string>, string> transitions = new Dictionary<Tuple<string,string>, string>();
 
@@ -92,7 +113,11 @@ namespace Code
 
 			if (Transition != null) {
 				string nextStateName;
-				if (!transitions.TryGetValue(Tuple.Create(currentState.Name, Transition.Name), out nextStateName)) {
+				if (Transition.Name == DirectTransition.Name) {
+					nextStateName = (string)Transition.Parameters[0];
+					Transition = DirectTransition.Params(Transition.Parameters.Skip(1));
+				}
+				else if (!transitions.TryGetValue(Tuple.Create(currentState.Name, Transition.Name), out nextStateName)) {
 					SelectState(errorStateName);
 				}
 
@@ -105,8 +130,9 @@ namespace Code
 
 				Transition = null;
 			}
-
-			currentState.Update();
+			else {
+				currentState.Update();
+			}
 		}
 
 		protected void SelectState(string name)
@@ -116,7 +142,19 @@ namespace Code
 
 			currentStateName = name;
 			currentState = states[name];
+			if (Transition != null)
+				((State)currentState).Parameters = Transition.Parameters;
 			currentState.Enter();
+		}
+	}
+
+	public class StateNameAttribute : Attribute
+	{
+		public string name;
+
+		public StateNameAttribute(string name)
+		{
+			this.name = name;
 		}
 	}
 
