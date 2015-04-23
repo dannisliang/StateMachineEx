@@ -8,6 +8,7 @@ namespace StateMachineEx
 	{
 		string Name { get; }
 		StateMachine StateMachine { get; }
+		object Context { get; }
 		Transition Transition { set; }
 
 		void Enter();
@@ -22,6 +23,7 @@ namespace StateMachineEx
 
 		public string Name { get { return name; } }
 		public StateMachine StateMachine { get { return stateMachine; } set { stateMachine = value; } }
+		public object Context { get { return stateMachine.Context; } }
 		public object[] Parameters { get; set; }
 		public Transition Transition { set { stateMachine.Transition = value; } }		
 
@@ -40,6 +42,11 @@ namespace StateMachineEx
 		}
 
 		public virtual void Init() { }
+	}
+
+	public class State<C> : State
+	{
+		new public C Context { get { return (C)base.Context; } }
 	}
 
 	public class Transition
@@ -82,9 +89,20 @@ namespace StateMachineEx
 		IState errorState = null;
 
 
+		public object Context { get; protected set; }
 		public IEnumerable<IState> States { get { return states.Values; } }
 		public IState State { get { return currentState; } }
 		public Transition Transition { get; set; }
+
+
+		public StateMachine()
+		{
+		}
+
+		public StateMachine(object context)
+		{
+			Context = context;
+		}
 
 		public void DeclareState<T>(T state) where T : IState
 		{
