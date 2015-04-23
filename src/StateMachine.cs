@@ -33,6 +33,13 @@ namespace StateMachineEx
 			else
 				name = this.GetType().Name;
 		}
+
+		protected State(string name)
+		{
+			this.name = name;
+		}
+
+		public virtual void Init() { }
 	}
 
 	public class Transition
@@ -44,11 +51,17 @@ namespace StateMachineEx
 		{
 			Name = name;
 		}
+
+		public Transition(string name, params object[] parameters)
+		{
+			Name = name;
+			Parameters = parameters;
+		}
 		
 		public Transition Params(params object[] parameters)
 		{
-			Parameters = parameters;
-			return this;
+			Transition copy = new Transition(Name, parameters);
+			return copy;
 		}
 	}
 
@@ -68,6 +81,9 @@ namespace StateMachineEx
 		IState currentState = null;
 		IState errorState = null;
 
+
+		public IEnumerable<IState> States { get { return states.Values; } }
+		public IState State { get { return currentState; } }
 		public Transition Transition { get; set; }
 
 		public void DeclareState<T>(T state) where T : IState
@@ -90,6 +106,11 @@ namespace StateMachineEx
 			defaultStateName = stateName;
 		}
 
+		public void SetCurrentState(string stateName)
+		{
+			SelectState(stateName);
+		}
+
 		public void SetErrorState(string stateName)
 		{
 			errorStateName = stateName;
@@ -102,6 +123,12 @@ namespace StateMachineEx
 
 			currentState = null;
 			Transition = null;
+		}
+
+		public void MakeTransitionTo(string nextStateName)
+		{
+			Transition = null;
+			SwitchState(nextStateName);
 		}
 
 		public void Update()
@@ -121,17 +148,22 @@ namespace StateMachineEx
 					SelectState(errorStateName);
 				}
 
-				try {
-					SelectState(nextStateName);
-				}
-				catch {
-					SelectState(errorStateName);
-				}
-
+				SwitchState(nextStateName);
 				Transition = null;
 			}
 			else {
 				currentState.Update();
+			}
+		}
+
+		protected void SwitchState(string name)
+		{
+			try {
+				SelectState(name);
+			}
+			catch (Exception e) {
+				Transition = new Transition("Exception", e);
+				SelectState(errorStateName);
 			}
 		}
 
@@ -145,6 +177,11 @@ namespace StateMachineEx
 			if (Transition != null)
 				((State)currentState).Parameters = Transition.Parameters;
 			currentState.Enter();
+		}
+
+		internal void Load(string p)
+		{
+			throw new NotImplementedException();
 		}
 	}
 

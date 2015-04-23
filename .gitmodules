@@ -1,0 +1,3 @@
+[submodule "Libraries/UnityEngine"]
+	path = Libraries/UnityEngine
+	url = git@lufthansa:yatagarasu/unityengine.git

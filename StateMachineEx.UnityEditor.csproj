@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{992602D5-A571-457C-8A3F-0A67055E6942}</ProjectGuid>
+    <ProjectGuid>{747BCC95-7DC4-4ADB-9B2F-52684D6B4ADE}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>StateMachineEx</RootNamespace>
@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>bin\Debug.UnityEditor\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -25,7 +25,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>bin\Release.UnityEditor\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -39,14 +39,14 @@
       <HintPath>$(ProjectDir)\Libraries\UnityEngine\UnityEngine.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="UnityEditor">
+      <HintPath>$(ProjectDir)\Libraries\UnityEngine\UnityEditor.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="src\CoroutineState.cs" />
-    <Compile Include="src\TransitionState.cs" />
-    <Compile Include="src\StateMachine.cs" />
-    <Compile Include="src\StateMachineBehaviour.cs" />
-    <Compile Include="src\StateMachineContextBehaviour.cs" />
+    <Compile Include="Properties\AssemblyInfo.UnityEditor.cs" />
+    <Compile Include="src.UnityEditor\PropertyDrawer_StateMachine.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SystemEx\SystemEx.csproj">
@@ -58,6 +58,10 @@
       <Project>{5ddef78f-3298-4583-adf8-21421e4b29f9}</Project>
       <Name>UnityEngineEx</Name>
       <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="StateMachineEx.csproj">
+      <Project>{992602d5-a571-457c-8a3f-0a67055e6942}</Project>
+      <Name>StateMachineEx</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
